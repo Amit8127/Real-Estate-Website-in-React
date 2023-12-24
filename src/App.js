@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import Pages from "./components/Pages";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkWindowSize = () => {
+      setIsMobile(window.innerWidth <= 1000); // Adjust the threshold as needed
+    };
+
+    // Initial check
+    checkWindowSize();
+
+    // Listen for window resize events
+    window.addEventListener("resize", checkWindowSize);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", checkWindowSize);
+    };
+  }, []);
+
+  if (isMobile) {
+    return (
+      <div className="mobile-tablet">
+        <img src={"../images/logo.png"} alt="Headout" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Currently, we're not supporting Mobile & Tablets{" "}
+          <span role="img" aria-label="Warn">
+            🙏
+          </span>
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+      </div>
+    );
+  } else {
+    return <Pages />;
+  }
 }
 
 export default App;
